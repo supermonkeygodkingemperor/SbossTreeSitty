@@ -1,0 +1,2 @@
+Specify ABI (Application Binary Interface)
+APP_ABI := armeabi-v7a

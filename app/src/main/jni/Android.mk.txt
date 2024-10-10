@@ -1,0 +1,18 @@
+Specify Xenia's source files
+LOCAL_SRC_FILES := 
+xenia/cpu/cpu.cpp 
+xenia/gpu/gpu.cpp 
+xenia/memory/memory.cpp 
+xenia/audio/audio.cpp 
+xenia/input/input.cpp
+
+Specify Xenia's header files
+LOCAL_C_INCLUDES := 
+xenia/cpu 
+xenia/gpu 
+xenia/memory 
+xenia/audio 
+xenia/input
+
+Specify library name
+LOCAL_MODULE := xenia

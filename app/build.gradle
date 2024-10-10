@@ -1,0 +1,98 @@
+plugins {
+    id("com.android.application")
+}
+
+android {
+    compileSdkVersion(33)
+    ndkVersion = "25.1.8937393" // Or the latest version
+
+    defaultConfig {
+        applicationId = "jp.xenia.emulator"
+        minSdkVersion(24)
+        targetSdkVersion(33)
+        versionCode = 1
+        versionName = "Prototype"
+
+        externalNativeBuild {
+            ndkBuild {
+                arguments(
+                    "NDK_APPLICATION_MK=../../../build/xenia.Application.mk",
+                    "PREMAKE_ANDROIDNDK_PLATFORMS=Android-ARM64",
+                    "PREMAKE_ANDROIDNDK_PLATFORMS+=Android-x86_64",
+                    "-j" + Runtime.runtime.availableProcessors(),
+                    "--output-sync=none",
+                    "targets:xenia-app"
+                )
+            }
+        }
+
+        ndk {
+            abiFilters("arm64-v8a", "x86_64")
+            stl = "c++_static"
+        }
+    }
+
+    buildTypes {
+        release {
+            isMinifyEnabled = true
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
+
+            externalNativeBuild {
+                ndkBuild {
+                    arguments("PREMAKE_ANDROIDNDK_CONFIGURATIONS=Release")
+                }
+            }
+        }
+        debug {
+            applicationIdSuffix = ".debug"
+            isDebuggable = true
+
+            externalNativeBuild {
+                ndkBuild {
+                    arguments("PREMAKE_ANDROIDNDK_CONFIGURATIONS=Debug")
+                }
+            }
+        }
+        create("checked") {
+            applicationIdSuffix = ".checked"
+            isDebuggable = true
+
+            externalNativeBuild {
+                ndkBuild {
+                    arguments("PREMAKE_ANDROIDNDK_CONFIGURATIONS=Checked")
+                }
+            }
+        }
+    }
+
+    flavorDimensions("distribution")
+    productFlavors {
+        create("github") {
+            dimension = "distribution"
+            applicationIdSuffix = ".github"
+        }
+        create("googlePlay") {
+            dimension = "distribution"
+            // TODO(Triang3l): Provide a signing config for core contributors only.
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
+    }
+
+    externalNativeBuild {
+        ndkBuild {
+            path = file("../../../build/xenia.wks.Android.mk")
+        }
+    }
+}
+
+dependencies {
+    implementation("org.jetbrains:annotations:23.0.0")
+    testImplementation("junit:junit:4.13.2")
+}
