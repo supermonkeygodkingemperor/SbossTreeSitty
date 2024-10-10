@@ -15,6 +15,10 @@
     <!-- Granted automatically - guest sockets. -->
     <uses-permission android:name="android.permission.INTERNET" />
 
+    <!-- Request necessary permissions -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -23,8 +27,9 @@
         android:supportsRtl="true"
         android:theme="@android:style/Theme.Material.Light">
 
+        <!-- Declare MainActivity as the launcher activity -->
         <activity
-            android:name="jp.xenia.emulator.LauncherActivity"
+            android:name=".ui.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -32,15 +37,16 @@
             </intent-filter>
         </activity>
 
+        <!-- Other activities (optional) -->
         <activity
-            android:name="jp.xenia.emulator.GpuTraceViewerActivity"
+            android:name=".GpuTraceViewerActivity"
             android:exported="true"
             android:label="@string/activity_label_gpu_trace_viewer"
             android:screenOrientation="sensorLandscape"
             android:theme="@android:style/Theme.Material.Light.NoActionBar" />
 
         <activity
-            android:name="jp.xenia.emulator.WindowDemoActivity"
+            android:name=".WindowDemoActivity"
             android:exported="true"
             android:label="@string/activity_label_window_demo"
             android:theme="@android:style/Theme.Material.Light.NoActionBar" />
