@@ -15,8 +15,8 @@ include_directories(${ANDROID_NDK_INCLUDE_DIRS})
 # Add the Xenia source directory
 add_subdirectory(xenia)
 
-# Find all source files in the xenia/src directory and its subdirectories
-file(GLOB_RECURSE XENIA_SOURCES "xenia/src/*.cpp" "xenia/src/**/*.cpp")
+# Find all source files in the xenia/src/xenia directory and its subdirectories
+file(GLOB_RECURSE XENIA_SOURCES "xenia/src/xenia/*.cpp" "xenia/src/xenia/**/*.cpp" "xenia/src/xenia/**/*.c")
 
 # Define the main library
 add_library(xenia SHARED ${XENIA_SOURCES})
@@ -27,6 +27,8 @@ target_link_libraries(xenia
     android
     log
     # ... other libraries, e.g., OpenGL ES, OpenSL ES
+    GLESv2
+    OpenSLES
 )
 
 # Set the target ABI
