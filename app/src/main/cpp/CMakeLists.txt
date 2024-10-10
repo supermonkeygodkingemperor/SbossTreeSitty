@@ -32,4 +32,8 @@ target_link_libraries(xenia
 # Set the target ABI
 set_target_properties(xenia PROPERTIES
     ANDROID_ABI ${ANDROID_ABI}
+<<<<<<< Updated upstream
 )
+=======
+)
+>>>>>>> Stashed changes
