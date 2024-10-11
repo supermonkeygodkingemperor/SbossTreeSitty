@@ -1,67 +1,44 @@
-package com.example.sbostreesitty
+cmake
+cmake_minimum_required(VERSION 3.18.1)
 
-import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
-import android.util.Log
-import android.view.Surface
-import android.view.SurfaceView
-import androidx.compose.ui.layout.layout
-import kotlinx.coroutines.*
+project(xenia-android)
 
-class MainActivity : AppCompatActivity() {
+# Set the C++ standard
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-    companion object {
-        init {
-            try {
-                System.loadLibrary("xenia")
-            } catch (e: UnsatisfiedLinkError) {
-                Log.e("MainActivity", "Error loading native library: ${e.message}")
-            }
-        }
+# Find and include the Android NDK
+find_package(Android NDK REQUIRED)
+include_directories(${ANDROID_NDK_INCLUDE_DIRS})
 
-        private const val TAG = "MainActivity"
-    }
+# Add the Xenia source directory
+add_subdirectory(xenia/src/xenia)
 
-    private lateinit var surfaceView: SurfaceView
-    private var emulatorJob: Job? = null
+# Find all source files in the xenia/src/xenia directory and its subdirectories
+file(GLOB_RECURSE XENIA_SOURCES "xenia/src/xenia/*.cpp" "xenia/src/xenia/**/*.cpp" "xenia/src/xenia/**/*.c")
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+# Define the main library
+add_library(xenia SHARED ${XENIA_SOURCES})
 
-        surfaceView = findViewById(R.id.surfaceView) // Assuming you have a SurfaceView in your layout
+# Link with necessary libraries
+target_link_libraries(xenia
+# Link with system libraries
+android
+log
+# ... other libraries, e.g., OpenGL ES, OpenSL ES
+GLESv2
+OpenSLES
+# Add any other required libraries here, e.g., libavcodec, libavformat, etc.
+# You might need to find these libraries using find_library() if they are not system libraries.
+)
 
-        // Start emulation in a coroutine (optional)
-        emulatorJob = CoroutineScope(Dispatchers.IO).launch {
-            try {
-                startEmulation(surfaceView.holder.surface)
-            } catch (e: Exception) {
-                Log.e(TAG, "Error during emulation: ${e.message}")
-            }
-        }
-    }
+# Set the target ABI
+set_target_properties(xenia PROPERTIES
+ANDROID_ABI ${ANDROID_ABI}
+)
 
-    override fun onPause() {
-        super.onPause()
-        // Pause emulation or handle state changes here
-        emulatorJob?.cancel()
-    }
+# Set the library output directory
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/jniLibs/${ANDROID_ABI})
 
-    override fun onResume() {
-        super.onResume()
-        // Resume emulation or restore state here
-        if (emulatorJob?.isCancelled == true) {
-            emulatorJob = CoroutineScope(Dispatchers.IO).launch {
-                startEmulation(surfaceView.holder.surface)
-            }
-        }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        // Stop emulation and release resources here
-        emulatorJob?.cancel()
-    }
-
-    private external fun startEmulation(surface: Surface)
-}
+# Add any additional build flags or configurations as needed
+# For example, you might need to define preprocessor macros or include additional directories.

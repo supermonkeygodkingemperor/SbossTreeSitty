@@ -12,7 +12,7 @@ find_package(Android NDK REQUIRED)
 include_directories(${ANDROID_NDK_INCLUDE_DIRS})
 
 # Add the Xenia source directory
-add_subdirectory(xenia)
+add_subdirectory(xenia/src/xenia)
 
 # Find all source files in the xenia/src/xenia directory and its subdirectories
 file(GLOB_RECURSE XENIA_SOURCES "xenia/src/xenia/*.cpp" "xenia/src/xenia/**/*.cpp" "xenia/src/xenia/**/*.c")
@@ -20,21 +20,23 @@ file(GLOB_RECURSE XENIA_SOURCES "xenia/src/xenia/*.cpp" "xenia/src/xenia/**/*.cp
 # Define the main library
 add_library(xenia SHARED ${XENIA_SOURCES})
 
-# Link with necessary libraries
 target_link_libraries(xenia
         # Link with system libraries
         android
         log
-        # ... other libraries, e.g., OpenGL ES, OpenSL ES
         GLESv2
         OpenSLES
-        # Add any other required libraries here, e.g., libavcodec, libavformat, etc.
-        # You might need to find these libraries using find_library() if they are not system libraries.
+
+        # Link with Xenia dependencies (replace with actual paths if needed)
+        # Example for libavcodec:
+        ${LIBAVCODEC_LIBRARY} # Assuming you found it using find_library
+        # ... other dependencies (libavformat, zlib, libpng, libjpeg-turbo, FreeType)
+        # Follow similar patterns for other libraries
 )
 
 # Set the target ABI
 set_target_properties(xenia PROPERTIES
-        ANDROID_ABI ${ANDROID_ABI}
+    ANDROID_ABI ${ANDROID_ABI}
 )
 
 # Set the library output directory
