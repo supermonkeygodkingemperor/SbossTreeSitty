@@ -1,4 +1,3 @@
-cmake
 cmake_minimum_required(VERSION 3.18.1)
 
 project(xenia-android)
@@ -20,18 +19,34 @@ file(GLOB_RECURSE XENIA_SOURCES "xenia/src/xenia/*.cpp" "xenia/src/xenia/**/*.cp
 # Define the main library
 add_library(xenia SHARED ${XENIA_SOURCES})
 
-target_link_libraries(xenia
-        # Link with system libraries
-        android
-        log
-        GLESv2
-        OpenSLES
+# Find Vulkan
+find_package(Vulkan REQUIRED)
 
-        # Link with Xenia dependencies (replace with actual paths if needed)
-        # Example for libavcodec:
-        ${LIBAVCODEC_LIBRARY} # Assuming you found it using find_library
-        # ... other dependencies (libavformat, zlib, libpng, libjpeg-turbo, FreeType)
-        # Follow similar patterns for other libraries
+# Link with libraries
+target_link_libraries( # Specifies the target library.
+        xenia
+        # Links the target library to the log library.
+        log 
+        # Links the target library to the android library.
+        android
+        # Links the target library to the GLESv2 library.
+        GLESv2
+        # Links the target library to the OpenSLES library.
+        OpenSLES
+        # Links the target library to the avcodec library.
+        avcodec
+        # Links the target library to the avformat library.
+        avformat
+        # Links the target library to the z library.
+        z
+        # Links the target library to the png16 library.
+        png16
+        # Links the target library to the jpeg library.
+        jpeg
+        # Links the target library to the freetype library.
+        freetype
+        # Links the target library to the Vulkan library.
+        Vulkan::Vulkan
 )
 
 # Set the target ABI

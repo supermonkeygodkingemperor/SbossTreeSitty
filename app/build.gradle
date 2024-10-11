@@ -15,9 +15,12 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        ndkVersion "your_ndk_version" // Replace with the actual NDK version
+        abiFilters 'armeabi-v7a', 'arm64-v8a' // Add other ABIs as needed
         externalNativeBuild {
             cmake {
                 cppFlags ''
+                // Add any additional CMake arguments or configurations here
             }
         }
     }
@@ -35,7 +38,7 @@ android {
     externalNativeBuild {
         cmake {
             path file('src/main/cpp/CMakeLists.txt')
-            version '3.18.1'
+            version '3.18.1' // Ensure this version is compatible with Xenia
         }
     }
     buildFeatures {
@@ -54,4 +57,5 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.9")
+    // Add any additional dependencies here
 }
