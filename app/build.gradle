@@ -1,6 +1,6 @@
 plugins {
     id 'com.android.application'
-    id 'org.jetbrains.kotlin.android'
+    id 'org.jetbrains.kotlin.android' version '1.9.0' // Replace with your desired Kotlin version
 }
 
 android {
@@ -15,8 +15,10 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        ndkVersion "your_ndk_version" // Replace with the actual NDK version
-        abiFilters 'armeabi-v7a', 'arm64-v8a' // Add other ABIs as needed
+        ndk {
+            abiFilters 'armeabi-v7a', 'arm64-v8a' // Specify ABIs within the ndk block
+        }
+        ndkVersion "25.1.8937393" // Replace with your actual NDK version
         externalNativeBuild {
             cmake {
                 cppFlags ''
@@ -38,7 +40,7 @@ android {
     externalNativeBuild {
         cmake {
             path file('src/main/cpp/CMakeLists.txt')
-            version '3.18.1' // Ensure this version is compatible with Xenia
+            version '3.22.1' // Update to a more recent CMake version if needed
         }
     }
     buildFeatures {
