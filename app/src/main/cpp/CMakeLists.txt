@@ -22,30 +22,62 @@ add_library(xenia SHARED ${XENIA_SOURCES})
 # Find Vulkan
 find_package(Vulkan REQUIRED)
 
-# Set the search path for find_library to include jniLibs
-list(APPEND CMAKE_FIND_ROOT_PATH ${CMAKE_SOURCE_DIR}/app/src/main/jniLibs)
+# Set the JNI_LIBS_DIR variable
+set(JNI_LIBS_DIR ${CMAKE_SOURCE_DIR}/app/src/main/jniLibs)
 
-# Find libraries
+# Set the search path for find_library
+list(APPEND CMAKE_FIND_ROOT_PATH ${JNI_LIBS_DIR})
+
+# Find libraries with error handling
 find_library(LIBAVCODEC_LIBRARY avcodec)
+if(NOT LIBAVCODEC_LIBRARY)
+    message(FATAL_ERROR "Could not find libavcodec")
+endif()
+
 find_library(LIBAVFORMAT_LIBRARY avformat)
+if(NOT LIBAVFORMAT_LIBRARY)
+    message(FATAL_ERROR "Could not find libavformat")
+endif()
+
 find_library(LIBZ_LIBRARY z)
+if(NOT LIBZ_LIBRARY)
+    message(FATAL_ERROR "Could not find libz")
+endif()
+
 find_library(LIBPNG_LIBRARY png16)
+if(NOT LIBPNG_LIBRARY)
+    message(FATAL_ERROR "Could not find libpng16")
+endif()
+
 find_library(LIBJPEG_LIBRARY jpeg)
+if(NOT LIBJPEG_LIBRARY)
+    message(FATAL_ERROR "Could not find libjpeg")
+endif()
+
 find_library(LIBFREETYPE_LIBRARY freetype)
+if(NOT LIBFREETYPE_LIBRARY)
+    message(FATAL_ERROR "Could not find libfreetype")
+endif()
 
 # Link with libraries
 target_link_libraries(xenia
-    # ... (other libraries)
+    # System libraries
+    log
+    android
+    GLESv2
+    OpenSLES
+
+    # Other libraries
     ${LIBAVCODEC_LIBRARY}
     ${LIBAVFORMAT_LIBRARY}
     ${LIBZ_LIBRARY}
     ${LIBPNG_LIBRARY}
     ${LIBJPEG_LIBRARY}
     ${LIBFREETYPE_LIBRARY}
-    # ... (other libraries)
+    
+    # Links the target library to the Vulkan library.
+    Vulkan::Vulkan
 )
-
-#
 
 # Set the target ABI
 set_target_properties(xenia PROPERTIES
