@@ -1,7 +1,6 @@
 cmake
-cmake_minimum_required(VERSION 3.4.1)
+cmake_minimum_required(VERSION 3.18.1)
 
-# Project name
 project(xenia-android)
 
 # Set the C++ standard
@@ -23,15 +22,23 @@ add_library(xenia SHARED ${XENIA_SOURCES})
 
 # Link with necessary libraries
 target_link_libraries(xenia
-    # Link with system libraries
-    android
-    log
-    # ... other libraries, e.g., OpenGL ES, OpenSL ES
-    GLESv2
-    OpenSLES
+        # Link with system libraries
+        android
+        log
+        # ... other libraries, e.g., OpenGL ES, OpenSL ES
+        GLESv2
+        OpenSLES
+        # Add any other required libraries here, e.g., libavcodec, libavformat, etc.
+        # You might need to find these libraries using find_library() if they are not system libraries.
 )
 
 # Set the target ABI
 set_target_properties(xenia PROPERTIES
-    ANDROID_ABI ${ANDROID_ABI}
+        ANDROID_ABI ${ANDROID_ABI}
 )
+
+# Set the library output directory
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/jniLibs/${ANDROID_ABI})
+
+# Add any additional build flags or configurations as needed
+# For example, you might need to define preprocessor macros or include additional directories.
