@@ -1,98 +1,92 @@
 plugins {
-    id("com.android.application")
+    id 'com.android.application'
 }
 
 android {
-    compileSdkVersion(33)
-    ndkVersion = "25.1.8937393" // Or the latest version
+    compileSdkVersion 33
+    ndkVersion '25.0.8775105'
 
     defaultConfig {
-        applicationId = "jp.xenia.emulator"
-        minSdkVersion(24)
-        targetSdkVersion(33)
-        versionCode = 1
-        versionName = "Prototype"
-
+        applicationId 'jp.xenia.emulator'
+        // 24 (7.0) - Vulkan.
+        minSdkVersion 24
+        targetSdkVersion 33
+        versionCode 1
+        versionName 'Prototype'
         externalNativeBuild {
             ndkBuild {
-                arguments(
-                    "NDK_APPLICATION_MK=../../../build/xenia.Application.mk",
-                    "PREMAKE_ANDROIDNDK_PLATFORMS=Android-ARM64",
-                    "PREMAKE_ANDROIDNDK_PLATFORMS+=Android-x86_64",
-                    "-j" + Runtime.runtime.availableProcessors(),
-                    "--output-sync=none",
-                    "targets:xenia-app"
-                )
+                arguments 'NDK_APPLICATION_MK:=../../../build/xenia.Application.mk',
+                        'PREMAKE_ANDROIDNDK_PLATFORMS:=Android-ARM64',
+                        'PREMAKE_ANDROIDNDK_PLATFORMS+=Android-x86_64',
+                        // ndk.jobs doesn't work as of Gradle 7.1.0.
+                        "-j${Runtime.runtime.availableProcessors()}",
+                        // Work around "Bad file descriptor" on Windows on NDK r22+.
+                        '--output-sync=none'
+                // For the app, don't build the executables designed for running from a terminal.
+                // To build the executables, run ndk-build manually.
+                targets 'xenia-app'
             }
         }
-
         ndk {
-            abiFilters("arm64-v8a", "x86_64")
-            stl = "c++_static"
+            abiFilters 'arm64-v8a', 'x86_64'
+            stl 'c++_static'
         }
     }
 
     buildTypes {
         release {
-            isMinifyEnabled = true
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
-
             externalNativeBuild {
                 ndkBuild {
-                    arguments("PREMAKE_ANDROIDNDK_CONFIGURATIONS=Release")
+                    arguments 'PREMAKE_ANDROIDNDK_CONFIGURATIONS:=Release'
                 }
             }
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
         debug {
-            applicationIdSuffix = ".debug"
-            isDebuggable = true
-
+            applicationIdSuffix '.debug'
+            debuggable true
             externalNativeBuild {
                 ndkBuild {
-                    arguments("PREMAKE_ANDROIDNDK_CONFIGURATIONS=Debug")
+                    arguments 'PREMAKE_ANDROIDNDK_CONFIGURATIONS:=Debug'
                 }
             }
         }
-        create("checked") {
-            applicationIdSuffix = ".checked"
-            isDebuggable = true
-
+        checked {
+            applicationIdSuffix '.checked'
+            debuggable true
             externalNativeBuild {
                 ndkBuild {
-                    arguments("PREMAKE_ANDROIDNDK_CONFIGURATIONS=Checked")
+                    arguments 'PREMAKE_ANDROIDNDK_CONFIGURATIONS:=Checked'
                 }
             }
         }
     }
 
-    flavorDimensions("distribution")
+    flavorDimensions 'distribution'
     productFlavors {
-        create("github") {
-            dimension = "distribution"
-            applicationIdSuffix = ".github"
+        github {
+            dimension 'distribution'
+            applicationIdSuffix '.github'
         }
-        create("googlePlay") {
-            dimension = "distribution"
+        googlePlay {
+            dimension 'distribution'
             // TODO(Triang3l): Provide a signing config for core contributors only.
         }
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 
     externalNativeBuild {
         ndkBuild {
-            path = file("../../../build/xenia.wks.Android.mk")
+            path file('../../../build/xenia.wks.Android.mk')
         }
     }
 }
 
 dependencies {
-    implementation("org.jetbrains:annotations:23.0.0")
-    testImplementation("junit:junit:4.13.2")
+    implementation 'org.jetbrains:annotations:15.0'
 }
