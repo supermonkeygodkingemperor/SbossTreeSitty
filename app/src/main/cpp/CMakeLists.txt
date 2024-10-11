@@ -22,32 +22,30 @@ add_library(xenia SHARED ${XENIA_SOURCES})
 # Find Vulkan
 find_package(Vulkan REQUIRED)
 
+# Set the search path for find_library to include jniLibs
+list(APPEND CMAKE_FIND_ROOT_PATH ${CMAKE_SOURCE_DIR}/app/src/main/jniLibs)
+
+# Find libraries
+find_library(LIBAVCODEC_LIBRARY avcodec)
+find_library(LIBAVFORMAT_LIBRARY avformat)
+find_library(LIBZ_LIBRARY z)
+find_library(LIBPNG_LIBRARY png16)
+find_library(LIBJPEG_LIBRARY jpeg)
+find_library(LIBFREETYPE_LIBRARY freetype)
+
 # Link with libraries
-target_link_libraries( # Specifies the target library.
-        xenia
-        # Links the target library to the log library.
-        log 
-        # Links the target library to the android library.
-        android
-        # Links the target library to the GLESv2 library.
-        GLESv2
-        # Links the target library to the OpenSLES library.
-        OpenSLES
-        # Links the target library to the avcodec library.
-        avcodec
-        # Links the target library to the avformat library.
-        avformat
-        # Links the target library to the z library.
-        z
-        # Links the target library to the png16 library.
-        png16
-        # Links the target library to the jpeg library.
-        jpeg
-        # Links the target library to the freetype library.
-        freetype
-        # Links the target library to the Vulkan library.
-        Vulkan::Vulkan
+target_link_libraries(xenia
+    # ... (other libraries)
+    ${LIBAVCODEC_LIBRARY}
+    ${LIBAVFORMAT_LIBRARY}
+    ${LIBZ_LIBRARY}
+    ${LIBPNG_LIBRARY}
+    ${LIBJPEG_LIBRARY}
+    ${LIBFREETYPE_LIBRARY}
+    # ... (other libraries)
 )
+
+#
 
 # Set the target ABI
 set_target_properties(xenia PROPERTIES
