@@ -1,28 +1,27 @@
 plugins {
     id 'com.android.application'
-    id 'org.jetbrains.kotlin.android' version '1.9.0' // Replace with your desired Kotlin version
+    id 'org.jetbrains.kotlin.android' version '1.9.0'
 }
 
 android {
     namespace 'com.example.sbostreesitty'
-    compileSdk 34
+    compileSdk 34 // Use compileSdk instead of compileSdkVersion
 
     defaultConfig {
         applicationId "com.example.sbostreesitty"
         minSdk 24
-        targetSdk 33
+        targetSdk 33 // Use targetSdk instead of targetSdkVersion
         versionCode 1
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         ndk {
-            abiFilters 'armeabi-v7a', 'arm64-v8a' // Specify ABIs within the ndk block
+            abiFilters 'armeabi-v7a', 'arm64-v8a'
         }
-        ndkVersion "25.1.8937393" // Replace with your actual NDK version
+        // Remove ndkVersion; specify NDK path in local.properties
         externalNativeBuild {
             cmake {
                 cppFlags ''
-                // Add any additional CMake arguments or configurations here
             }
         }
     }
@@ -40,7 +39,7 @@ android {
     externalNativeBuild {
         cmake {
             path file('src/main/cpp/CMakeLists.txt')
-            version '3.22.1' // Update to a more recent CMake version if needed
+            version '3.22.1'
         }
     }
     buildFeatures {
@@ -49,7 +48,6 @@ android {
 }
 
 dependencies {
-
     implementation libs.androidx.appcompat.v161
     implementation libs.material.v190
     implementation libs.androidx.constraintlayout
@@ -59,5 +57,4 @@ dependencies {
     androidTestImplementation libs.androidx.junit.v115
     androidTestImplementation libs.androidx.espresso.core.v351
     implementation(libs.kotlinx.coroutines.android)
-    // Add any additional dependencies here
 }
