@@ -5,12 +5,12 @@ plugins {
 
 android {
     namespace 'com.example.sbostreesitty'
-    compileSdk 34 // Use compileSdk instead of compileSdkVersion
+    compileSdk 34
 
     defaultConfig {
         applicationId "com.example.sbostreesitty"
         minSdk 24
-        targetSdk 33 // Use targetSdk instead of targetSdkVersion
+        targetSdk 33
         versionCode 1
         versionName "1.0"
 
@@ -18,7 +18,6 @@ android {
         ndk {
             abiFilters 'armeabi-v7a', 'arm64-v8a'
         }
-        // Remove ndkVersion; specify NDK path in local.properties
         externalNativeBuild {
             cmake {
                 cppFlags ''
@@ -30,6 +29,9 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+        debug { // Add a debug build type
+            // Configure debug-specific settings here
         }
     }
     compileOptions {
